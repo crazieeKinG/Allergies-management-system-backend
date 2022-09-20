@@ -6,7 +6,6 @@
     "scripts": {
         "dev": "nodemon",
         "start": "node dist/index.js",
-        "postinstall": "tsc",
         "build": "tsc",
         "lint:fix": "tslint --fix -c tslint.json 'src/**/*.{ts,js}' 'test/**/*.{ts,js}'",
         "prettify": "prettier --single-quote --print-width 120 --write {src,test}/**/*.ts",
@@ -14,7 +13,8 @@
         "migrate:make": "knex --migrations-directory src/db/migrations migrate:make",
         "migrate": "knex migrate:latest --knexfile src/db/knexfile.ts",
         "rollback": "knex migrate:rollback --knexfile src/db/knexfile.ts",
-        "migrate:prod": "knex migrate:latest --knexfile dist/db/knexfile.js"
+        "migrate:prod": "knex migrate:latest --knexfile dist/db/knexfile.js",
+        "test": "jest"
     },
     "keywords": [
         "typescript",
@@ -39,12 +39,16 @@
         "@types/bcrypt": "^5.0.0",
         "@types/cors": "^2.8.12",
         "@types/express": "^4.17.13",
+        "@types/http-status-codes": "^1.2.0",
+        "@types/jest": "^29.0.3",
         "@types/jsonwebtoken": "^8.5.8",
         "@types/multer": "^1.4.7",
         "@types/node": "^18.6.2",
+        "jest": "^29.0.3",
         "nodemon": "^2.0.19",
         "npm-run-all": "^4.1.5",
         "prettier": "^2.7.1",
+        "ts-jest": "^29.0.1",
         "ts-lint": "^4.5.1",
         "ts-node": "^10.9.1",
         "tslint-config-leapfrog": "^1.0.3",
