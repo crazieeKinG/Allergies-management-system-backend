@@ -36,3 +36,21 @@ export const signin = async (
         next(error);
     }
 };
+
+export const updateUser = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
+    logger.info("Update User: Controller");
+    const { userId } = request.params;
+    const userData = { ...request.body } as UserToInsert;
+
+    try {
+        const result = await userService.updateUser(userData, userId);
+        response.status(StatusCodes.CREATED);
+        response.send(result);
+    } catch (error) {
+        next(error);
+    }
+};

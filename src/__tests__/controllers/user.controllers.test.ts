@@ -5,7 +5,7 @@ import { userService } from "../../services";
 
 jest.mock("../../services");
 
-describe("Create user controller", () => {
+describe("Create user", () => {
     const data = {
         fullName: "Saajan Shrestha",
         email: "saajan@test.com",
