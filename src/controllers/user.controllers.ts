@@ -4,7 +4,7 @@ import { userService } from "../services";
 import { StatusCodes } from "http-status-codes";
 import logger from "../misc/logger";
 
-export const createUser = (
+export const createUser = async (
     request: Request,
     response: Response,
     next: NextFunction
@@ -12,13 +12,11 @@ export const createUser = (
     logger.info("Create User: Controller");
     const userData = { ...request.body } as UserToInsert;
 
-    userService
-        .createUser(userData)
-        .then((result) => {
-            response.status(StatusCodes.CREATED);
-            response.send(result);
-        })
-        .catch((error) => {
-            next(error);
-        });
+    try {
+        const result = await userService.createUser(userData);
+        response.status(StatusCodes.CREATED);
+        response.send(result);
+    } catch (error) {
+        next(error);
+    }
 };

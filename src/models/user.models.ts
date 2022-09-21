@@ -1,8 +1,7 @@
-import { StatusCodes } from "http-status-codes";
 import { USER_TABLE_NAME } from "../constants/model.constants";
 import db from "../db/db";
+import DatabaseError from "../errors/Database.error";
 import UserInterface, { UserToInsert } from "../interfaces/User.interfaces";
-import CustomError from "../misc/CustomError";
 import logger from "../misc/logger";
 import createUniqueId from "../utils/createUniqueId";
 
@@ -23,10 +22,7 @@ class UserModel {
             return insertedUser;
         } catch (error) {
             console.error(error);
-            throw new CustomError(
-                "Database Error",
-                StatusCodes.INTERNAL_SERVER_ERROR
-            );
+            throw DatabaseError;
         }
     };
 }
