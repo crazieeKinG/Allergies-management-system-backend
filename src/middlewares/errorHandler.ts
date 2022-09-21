@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import CustomError from "../misc/CustomError";
+import logger from "../misc/logger";
 
 /**
  * Middleware to handle errors
@@ -14,6 +15,7 @@ export const errorHandler = (
     res: Response,
     next: NextFunction
 ) => {
+    logger.error(error.message)
     res.status(error.statusCode);
     res.json({
         message: error.message,

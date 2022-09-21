@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { UserToInsert } from "../interfaces/User.interfaces";
+import { UserCredentials, UserToInsert } from "../interfaces/User.interfaces";
 import { userService } from "../services";
 import { StatusCodes } from "http-status-codes";
 import logger from "../misc/logger";
@@ -15,6 +15,22 @@ export const createUser = async (
     try {
         const result = await userService.createUser(userData);
         response.status(StatusCodes.CREATED);
+        response.send(result);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const signin = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
+    logger.info("Signin user: Controller");
+    const userCredentials = { ...request.body } as UserCredentials;
+
+    try {
+        const result = await userService.signin(userCredentials);
         response.send(result);
     } catch (error) {
         next(error);

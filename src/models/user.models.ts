@@ -21,7 +21,22 @@ class UserModel {
             logger.info(`User [${insertedUser[0].id}] created successfully`);
             return insertedUser;
         } catch (error) {
-            console.error(error);
+            throw DatabaseError;
+        }
+    };
+
+    public static getUserByEmail = async (email: string) => {
+        try {
+            logger.info(`Get User by email [${email}]: Model`);
+
+            const retrievedUser: UserInterface = await db
+                .table(this.table)
+                .select("*")
+                .where({ email: email })
+                .first();
+                
+            return retrievedUser;
+        } catch (error) {
             throw DatabaseError;
         }
     };
