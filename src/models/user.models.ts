@@ -25,7 +25,43 @@ class UserModel {
             logger.info(`User [${insertedUser[0].id}] created successfully`);
             return insertedUser;
         } catch (error) {
+            console.log(error);
             throw DatabaseError;
+        }
+    };
+
+    public static getUser = async () => {
+        try {
+            logger.info(`Get All User: Model`);
+
+            const retrievedUser: UserInterface[] = await db
+                .table(this.table)
+                .select("*");
+
+            logger.info(`All users retrieved successfully`);
+            return retrievedUser;
+        } catch (error) {
+            console.log(error);
+            throw UserNotFoundError;
+        }
+    };
+
+    public static getUserById = async (id: string) => {
+        try {
+            logger.info(`Get User by id [${id}]: Model`);
+
+            const retrievedUser: UserInterface = await db
+                .table(this.table)
+                .select("*")
+                .where({ id: id })
+                .first();
+
+            logger.info(`User [${retrievedUser.id}] retrieved successfully`);
+            return retrievedUser;
+        } catch (error) {
+            console.log(error);
+            logger.error(`User [${id}] not found`);
+            throw UserNotFoundError;
         }
     };
 
@@ -42,6 +78,7 @@ class UserModel {
             logger.info(`User [${retrievedUser.id}] retrieved successfully`);
             return retrievedUser;
         } catch (error) {
+            console.log(error);
             logger.error(`User [${email}] not found`);
             throw UserNotFoundError;
         }
@@ -63,6 +100,7 @@ class UserModel {
             logger.info(`User [${updatedUser[0].id}] updated successfully`);
             return updatedUser;
         } catch (error) {
+            console.log(error);
             throw DatabaseError;
         }
     };
@@ -80,6 +118,7 @@ class UserModel {
             logger.info(`User [${userId}] deleted successfully`);
             return deletedData;
         } catch (error) {
+            console.log(error);
             throw DatabaseError;
         }
     };

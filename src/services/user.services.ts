@@ -28,6 +28,17 @@ export const createUser = async (
     };
 };
 
+export const getUsers = async () => {
+    logger.info("Get all users: Service");
+
+    const retrievedUsers = await UserModel.getUser();
+
+    return {
+        data: retrievedUsers,
+        message: "User fetched successfully",
+    };
+};
+
 export const signin = async (userCredentials: UserCredentials) => {
     logger.info("Signin user: Service");
 
@@ -59,6 +70,8 @@ export const updateUser = async (
     userId: string
 ): Promise<ResponseData<UserInterface>> => {
     logger.info("Update User: Service");
+
+    await UserModel.getUserById(userId);
 
     const updatedData = await UserModel.updateUser(userData, userId);
 

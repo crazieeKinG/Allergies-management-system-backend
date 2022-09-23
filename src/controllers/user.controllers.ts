@@ -21,6 +21,21 @@ export const createUser = async (
     }
 };
 
+export const getUsers = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
+    logger.info("Get all users: Controller");
+
+    try {
+        const result = await userService.getUsers();
+        response.send(result);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const signin = async (
     request: Request,
     response: Response,
