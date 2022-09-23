@@ -8,6 +8,7 @@ import logger from "../misc/logger";
 import UserModel from "../models/user.models";
 import hashPassword from "../utils/hashPassword";
 import verifyPassword from "../utils/verifyPassword";
+import jwt from "jsonwebtoken";
 
 export const createUser = async (
     userData: UserToInsert
@@ -38,10 +39,16 @@ export const signin = async (userCredentials: UserCredentials) => {
     );
     if (!passwordVerification) throw InvalidPasswordError;
 
+    const accessToken = jwt.sign(
+        { userId: retrievedUser.id },
+        process.env.JWT_SECRET_KEY as string
+    );
+
     return {
         data: {
             user: retrievedUser.fullName,
-            accessToken: retrievedUser.id,
+            id: retrievedUser.id,
+            accessToken: accessToken,
         },
         message: "User logged in successfully",
     };
