@@ -1,9 +1,9 @@
 import { StatusCodes } from "http-status-codes";
-import { userController } from "../../controllers";
-import DatabaseError from "../../errors/Database.error";
-import { userService } from "../../services";
+import { userController } from "../controllers";
+import DatabaseError from "../errors/Database.error";
+import UserModel from "../models/user.models";
 
-jest.mock("../../services");
+jest.mock("../../models/user.models");
 
 describe("Create user", () => {
     const data = {
@@ -27,17 +27,18 @@ describe("Create user", () => {
         };
     });
 
-    it("should call mocked services", () => {
-        userService.createUser(data as any);
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
 
-        expect(userService.createUser).toBeCalled();
+    it("should call mocked database model", () => {
+        UserModel.createUser(data as any);
+
+        expect(UserModel.createUser).toBeCalled();
     });
 
     it("should create a new user with status of CREATED", async () => {
-        (userService.createUser as jest.Mock).mockResolvedValueOnce({
-            data: [data as any],
-            message: "User created successfully",
-        });
+        (UserModel.createUser as jest.Mock).mockResolvedValueOnce([data]);
 
         await userController.createUser(
             requestMock as any,
@@ -48,8 +49,23 @@ describe("Create user", () => {
         expect(responseMock.status).toBeCalledWith(StatusCodes.CREATED);
     });
 
+    it("should create a new user with message of 'User created successfully'", async () => {
+        (UserModel.createUser as jest.Mock).mockResolvedValueOnce([data]);
+
+        await userController.createUser(
+            requestMock as any,
+            responseMock as any,
+            nextFunctionMock as any
+        );
+
+        expect(responseMock.send).toBeCalledWith({
+            data: [data],
+            message: "User created successfully",
+        });
+    });
+
     it("should have throw DatabaseError when rejected", async () => {
-        (userService.createUser as jest.Mock).mockRejectedValueOnce(
+        (UserModel.createUser as jest.Mock).mockRejectedValueOnce(
             DatabaseError
         );
 
@@ -59,8 +75,6 @@ describe("Create user", () => {
             nextFunctionMock as any
         );
 
-        expect(nextFunctionMock).toBeCalledWith(
-            DatabaseError
-        );
+        expect(nextFunctionMock).toBeCalledWith(DatabaseError);
     });
 });

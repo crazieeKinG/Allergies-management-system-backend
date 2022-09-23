@@ -1,7 +1,4 @@
-import {
-    InvalidPasswordError,
-    UserNotFoundError,
-} from "../errors/Signin.error";
+import { InvalidPasswordError } from "../errors/Signin.error";
 import ResponseData from "../interfaces/Response.interface";
 import UserInterface, {
     UserCredentials,
@@ -34,7 +31,6 @@ export const signin = async (userCredentials: UserCredentials) => {
     logger.info("Signin user: Service");
 
     const retrievedUser = await UserModel.getUserByEmail(userCredentials.email);
-    if (!retrievedUser) throw UserNotFoundError;
 
     const passwordVerification = await verifyPassword(
         userCredentials.password,
@@ -62,5 +58,18 @@ export const updateUser = async (
     return {
         data: updatedData,
         message: "User updated successfully",
+    };
+};
+
+export const deleteUser = async (
+    userId: string
+): Promise<ResponseData<UserInterface>> => {
+    logger.info("Delete User: Service");
+
+    const deletedData = await UserModel.deleteUser(userId);
+
+    return {
+        data: deletedData,
+        message: "User deleted successfully",
     };
 };

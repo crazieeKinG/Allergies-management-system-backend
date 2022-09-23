@@ -4,6 +4,7 @@ import {
 } from "../constants/model.constants";
 import db from "../db/db";
 import DatabaseError from "../errors/Database.error";
+import { UserNotFoundError } from "../errors/Signin.error";
 import UserInterface, { UserToInsert } from "../interfaces/User.interfaces";
 import logger from "../misc/logger";
 import createUniqueId from "../utils/createUniqueId";
@@ -41,7 +42,8 @@ class UserModel {
             logger.info(`User [${retrievedUser.id}] retrieved successfully`);
             return retrievedUser;
         } catch (error) {
-            throw DatabaseError;
+            logger.error(`User [${email}] not found`);
+            throw UserNotFoundError;
         }
     };
 
@@ -60,6 +62,23 @@ class UserModel {
 
             logger.info(`User [${updatedUser[0].id}] updated successfully`);
             return updatedUser;
+        } catch (error) {
+            throw DatabaseError;
+        }
+    };
+
+    public static deleteUser = async (userId: string) => {
+        try {
+            logger.info("Delete User: Model");
+
+            const deletedData = await db
+                .table(this.table)
+                .delete()
+                .where({ id: userId })
+                .returning(USER_TABLE_RETURNING);
+
+            logger.info(`User [${userId}] deleted successfully`);
+            return deletedData;
         } catch (error) {
             throw DatabaseError;
         }
