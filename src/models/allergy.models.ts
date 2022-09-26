@@ -1,8 +1,13 @@
-import { ALLERGY_TABLE_NAME, ALLERGY_TABLE_RETURNING } from "../constants/model.constants";
+import {
+    ALLERGY_TABLE_NAME,
+    ALLERGY_TABLE_RETURNING,
+} from "../constants/model.constants";
 import db from "../db/db";
 import { AllergyNotFoundError } from "../errors/allergy.error";
 import DatabaseError from "../errors/Database.error";
-import AllergyInterface, { AllergyToInsert } from "../interfaces/Allergy.interfaces";
+import AllergyInterface, {
+    AllergyToInsert,
+} from "../interfaces/Allergy.interfaces";
 import logger from "../misc/logger";
 import createUniqueId from "../utils/createUniqueId";
 
@@ -21,8 +26,10 @@ class AllergyModel {
                 .insert({ ...allergyData, id: uniqueId })
                 .returning(ALLERGY_TABLE_RETURNING);
 
-            logger.info(`Allergy [${insertedAllergy[0].id}] created successfully`);
-            return insertedAllergy;
+            logger.info(
+                `Allergy [${insertedAllergy[0].id}] created successfully`
+            );
+            return insertedAllergy[0];
         } catch (error) {
             console.log(error);
             throw DatabaseError;
@@ -57,7 +64,9 @@ class AllergyModel {
                 .where({ id: id })
                 .first();
 
-            logger.info(`Allergy [${retrievedAllergy.id}] retrieved successfully`);
+            logger.info(
+                `Allergy [${retrievedAllergy.id}] retrieved successfully`
+            );
             return retrievedAllergy;
         } catch (error) {
             console.log(error);
@@ -81,8 +90,10 @@ class AllergyModel {
                 .where({ id: allergyId })
                 .returning(ALLERGY_TABLE_RETURNING);
 
-            logger.info(`Allergy [${updatedAllergy[0].id}] updated successfully`);
-            return updatedAllergy;
+            logger.info(
+                `Allergy [${updatedAllergy[0].id}] updated successfully`
+            );
+            return updatedAllergy[0];
         } catch (error) {
             console.log(error);
             throw DatabaseError;

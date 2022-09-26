@@ -19,3 +19,10 @@ export const ALLERGY_TABLE_RETURNING = [
     "sub_category",
     "created_at",
 ];
+
+export const SYMPTOM_TABLE_RETURNING = [
+    "id",
+    "symptom",
+    "description",
+    "allergy_id",
+];

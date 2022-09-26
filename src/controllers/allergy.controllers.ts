@@ -1,8 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { AllergyToInsert } from "../interfaces/Allergy.interfaces";
+import AllergyInterface, {
+    AllergyToInsert,
+} from "../interfaces/Allergy.interfaces";
+import SymptomInterface from "../interfaces/Symptom.interfaceS";
 import logger from "../misc/logger";
-import { allergyService } from "../services";
+import { allergyService, symptomService } from "../services";
 
 export const createAllergy = async (
     request: Request,
@@ -10,11 +13,33 @@ export const createAllergy = async (
     next: NextFunction
 ) => {
     logger.info("Create Allergy: Controller");
-    const allergyData = { ...request.body } as AllergyToInsert;
+    const allData = request.body as AllergyInterface;
+
+    const allergyData: AllergyToInsert = {
+        allergyName: allData.allergyName,
+        riskLevel: allData.riskLevel,
+        subCategory: allData.subCategory,
+    };
 
     try {
         const result = await allergyService.createAllergy(allergyData);
-        
+        console.log(allData);
+        if (allData.symptoms) {
+            const symptomData = [...allData.symptoms];
+            symptomData.forEach(
+                (symptom) =>
+                    (symptom.allergyId = (<AllergyInterface>result.data).id)
+            );
+
+            console.log((<AllergyInterface>result.data),symptomData);
+
+            const result_symptoms = await symptomService.createSymptom(
+                symptomData
+            );
+
+            (result.data as AllergyInterface).symptoms =
+                result_symptoms.data as SymptomInterface[];
+        }
         response.status(StatusCodes.CREATED);
         response.send(result);
     } catch (error) {

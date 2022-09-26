@@ -13,7 +13,8 @@ export async function up(knex: Knex): Promise<void> {
         table
             .foreign("allergy_id")
             .references("id")
-            .inTable(ALLERGY_TABLE_NAME);
+            .inTable(ALLERGY_TABLE_NAME)
+            .onDelete("CASCADE");
     });
 }
 
