@@ -1,4 +1,6 @@
 export const USER_TABLE_NAME = "user_account";
+export const ALLERGY_TABLE_NAME = "allergy";
+export const SYMPTOM_TABLE_NAME = "symptom";
 
 export const USER_TABLE_RETURNING = [
     "id",
@@ -6,4 +8,14 @@ export const USER_TABLE_RETURNING = [
     "email",
     "date_of_birth",
     "address",
+    "created_at",
+];
+
+export const ALLERGY_TABLE_RETURNING = [
+    "id",
+    "allergy_name",
+    "referred_name",
+    "risk_level",
+    "sub_category",
+    "created_at",
 ];

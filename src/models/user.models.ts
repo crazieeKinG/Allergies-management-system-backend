@@ -46,7 +46,7 @@ class UserModel {
             return retrievedUser;
         } catch (error) {
             console.log(error);
-            throw UserNotFoundError;
+            throw DatabaseError;
         }
     };
 

@@ -7,16 +7,17 @@ import {
     userResetPasswordSchema,
     userSignInSchema,
     userUpdateSchema,
-} from "../schemas/user.schema";
+} from "../schemas/user.schemas";
 
 const userRouter = Router();
+
+userRouter.get("/", authenticate, userController.getUsers);
 
 userRouter.post(
     "/",
     validateRequest(userInsertSchema),
     userController.createUser
 );
-userRouter.get("/all", authenticate, userController.getUsers);
 
 userRouter.post(
     "/signin",
