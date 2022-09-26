@@ -21,6 +21,21 @@ export const createUser = async (
     }
 };
 
+export const getUsers = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
+    logger.info("Get all users: Controller");
+
+    try {
+        const result = await userService.getUsers();
+        response.send(result);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const signin = async (
     request: Request,
     response: Response,
@@ -48,7 +63,22 @@ export const updateUser = async (
 
     try {
         const result = await userService.updateUser(userData, userId);
-        response.status(StatusCodes.CREATED);
+        response.send(result);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const deleteUser = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
+    logger.info("Delete User: Controller");
+    const { userId } = request.params;
+
+    try {
+        const result = await userService.deleteUser(userId);
         response.send(result);
     } catch (error) {
         next(error);

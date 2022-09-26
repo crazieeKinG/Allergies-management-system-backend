@@ -1,7 +1,4 @@
-import {
-    InvalidPasswordError,
-    UserNotFoundError,
-} from "../errors/Signin.error";
+import { InvalidPasswordError } from "../errors/Signin.error";
 import ResponseData from "../interfaces/Response.interface";
 import UserInterface, {
     UserCredentials,
@@ -11,6 +8,7 @@ import logger from "../misc/logger";
 import UserModel from "../models/user.models";
 import hashPassword from "../utils/hashPassword";
 import verifyPassword from "../utils/verifyPassword";
+import jwt from "jsonwebtoken";
 
 export const createUser = async (
     userData: UserToInsert
@@ -30,11 +28,21 @@ export const createUser = async (
     };
 };
 
+export const getUsers = async () => {
+    logger.info("Get all users: Service");
+
+    const retrievedUsers = await UserModel.getUser();
+
+    return {
+        data: retrievedUsers,
+        message: "User fetched successfully",
+    };
+};
+
 export const signin = async (userCredentials: UserCredentials) => {
     logger.info("Signin user: Service");
 
     const retrievedUser = await UserModel.getUserByEmail(userCredentials.email);
-    if (!retrievedUser) throw UserNotFoundError;
 
     const passwordVerification = await verifyPassword(
         userCredentials.password,
@@ -42,10 +50,16 @@ export const signin = async (userCredentials: UserCredentials) => {
     );
     if (!passwordVerification) throw InvalidPasswordError;
 
+    const accessToken = jwt.sign(
+        { userId: retrievedUser.id },
+        process.env.JWT_SECRET_KEY as string
+    );
+
     return {
         data: {
             user: retrievedUser.fullName,
-            accessToken: retrievedUser.id,
+            id: retrievedUser.id,
+            accessToken: accessToken,
         },
         message: "User logged in successfully",
     };
@@ -57,10 +71,25 @@ export const updateUser = async (
 ): Promise<ResponseData<UserInterface>> => {
     logger.info("Update User: Service");
 
+    await UserModel.getUserById(userId);
+
     const updatedData = await UserModel.updateUser(userData, userId);
 
     return {
         data: updatedData,
         message: "User updated successfully",
+    };
+};
+
+export const deleteUser = async (
+    userId: string
+): Promise<ResponseData<UserInterface>> => {
+    logger.info("Delete User: Service");
+
+    const deletedData = await UserModel.deleteUser(userId);
+
+    return {
+        data: deletedData,
+        message: "User deleted successfully",
     };
 };
