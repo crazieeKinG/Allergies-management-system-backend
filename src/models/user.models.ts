@@ -12,6 +12,8 @@ import createUniqueId from "../utils/createUniqueId";
 class UserModel {
     public static table = USER_TABLE_NAME;
 
+    // Create user
+
     public static createUser = async (userData: UserToInsert) => {
         try {
             logger.info("Create User: Model");
@@ -30,6 +32,8 @@ class UserModel {
         }
     };
 
+    // Read user data from database
+
     public static getUser = async () => {
         try {
             logger.info(`Get All User: Model`);
@@ -42,7 +46,7 @@ class UserModel {
             return retrievedUser;
         } catch (error) {
             console.log(error);
-            throw UserNotFoundError;
+            throw DatabaseError;
         }
     };
 
@@ -84,6 +88,8 @@ class UserModel {
         }
     };
 
+    // Update user data
+
     public static updateUser = async (
         userData: UserToInsert,
         userId: string
@@ -104,6 +110,28 @@ class UserModel {
             throw DatabaseError;
         }
     };
+
+    public static resetPassword = async (password: string, userId: string) => {
+        try {
+            logger.info("update user - Reset password: Model");
+
+            const updatedUser: UserInterface[] = await db
+                .table(this.table)
+                .update({ password: password })
+                .where({ id: userId })
+                .returning(USER_TABLE_RETURNING);
+
+            logger.info(
+                `User [${updatedUser[0].id}] updated successfully - reset password`
+            );
+            return updatedUser;
+        } catch (error) {
+            console.log(error);
+            throw DatabaseError;
+        }
+    };
+
+    //Delete user from database
 
     public static deleteUser = async (userId: string) => {
         try {

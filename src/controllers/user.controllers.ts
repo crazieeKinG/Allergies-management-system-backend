@@ -69,6 +69,24 @@ export const updateUser = async (
     }
 };
 
+export const resetPassword = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
+    logger.info("Update User - reset password: Controller");
+
+    const { userId } = request.params;
+    const { password }: { password: string } = request.body;
+
+    try {
+        const result = await userService.resetPassword(password, userId);
+        response.send(result);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const deleteUser = async (
     request: Request,
     response: Response,

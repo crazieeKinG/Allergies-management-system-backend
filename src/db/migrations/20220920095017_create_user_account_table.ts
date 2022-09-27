@@ -7,8 +7,9 @@ export async function up(knex: Knex): Promise<void> {
         table.string("full_name").notNullable();
         table.string("email").notNullable().unique();
         table.string("password").notNullable();
-        table.string("date_of_birth").notNullable();
+        table.datetime("date_of_birth").notNullable();
         table.string("address").notNullable();
+        table.datetime("created_at").defaultTo(knex.fn.now()).notNullable();
     });
 }
 

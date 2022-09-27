@@ -11,12 +11,17 @@ const validateRequest =
         if (body.dateOfBirth) body.dateOfBirth = new Date(body.dateOfBirth);
 
         try {
-            const response = await schema.validate(body, {
+            const validatedResponse = await schema.validate(body, {
                 strict: true,
+            });
+
+            const stripedResponse = await schema.validate(validatedResponse, {
                 stripUnknown: true,
             });
 
-            console.log(response);
+            request.body = { ...stripedResponse };
+
+            console.log(stripedResponse);
             next();
         } catch (error: any) {
             next(

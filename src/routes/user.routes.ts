@@ -2,23 +2,42 @@ import { Router } from "express";
 import { userController } from "../controllers";
 import authenticate from "../middlewares/authentication";
 import validateRequest from "../middlewares/validate";
-import { userInsertSchema, userUpdateSchema } from "../schemas/userSchema";
+import {
+    userInsertSchema,
+    userResetPasswordSchema,
+    userSignInSchema,
+    userUpdateSchema,
+} from "../schemas/user.schemas";
 
 const userRouter = Router();
+
+userRouter.get("/", authenticate, userController.getUsers);
 
 userRouter.post(
     "/",
     validateRequest(userInsertSchema),
     userController.createUser
 );
-userRouter.get("/all", authenticate, userController.getUsers);
-userRouter.post("/signin", userController.signin);
+
+userRouter.post(
+    "/signin",
+    validateRequest(userSignInSchema),
+    userController.signin
+);
+
 userRouter.put(
     "/:userId",
     authenticate,
     validateRequest(userUpdateSchema),
     userController.updateUser
 );
+userRouter.put(
+    "/:userId/reset/password",
+    authenticate,
+    validateRequest(userResetPasswordSchema),
+    userController.resetPassword
+);
+
 userRouter.delete("/:userId", authenticate, userController.deleteUser);
 
 export default userRouter;

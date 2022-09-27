@@ -81,6 +81,20 @@ export const updateUser = async (
     };
 };
 
+export const resetPassword = async (password: string, userId: string) => {
+    logger.info("Update user - reset password: Service");
+
+    await UserModel.getUserById(userId);
+
+    const hashedPassword = await hashPassword(password);
+    const updatedData = await UserModel.resetPassword(hashedPassword, userId);
+
+    return {
+        data: updatedData,
+        message: "User updated successfully - reset password",
+    };
+};
+
 export const deleteUser = async (
     userId: string
 ): Promise<ResponseData<UserInterface>> => {
