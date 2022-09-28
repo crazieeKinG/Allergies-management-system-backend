@@ -6,8 +6,8 @@ export async function up(knex: Knex): Promise<void> {
         table.string("id").primary();
         table.string("allergy_name").notNullable();
         table.string("referred_name").nullable();
+        table.text("description").defaultTo("").nullable();
         table.string("risk_level").notNullable();
-        table.boolean("sub_category").defaultTo(false).notNullable();
         table.datetime("created_at").defaultTo(knex.fn.now()).notNullable();
     });
 }

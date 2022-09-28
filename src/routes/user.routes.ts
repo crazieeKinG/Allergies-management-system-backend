@@ -14,7 +14,7 @@ const userRouter = Router();
 userRouter.get("/", authenticate, userController.getUsers);
 
 userRouter.post(
-    "/",
+    "/signup",
     validateRequest(userInsertSchema),
     userController.createUser
 );

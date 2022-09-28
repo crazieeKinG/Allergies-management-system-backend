@@ -1,8 +1,13 @@
-import { SYMPTOM_TABLE_NAME, SYMPTOM_TABLE_RETURNING } from "../constants/model.constants";
+import {
+    SYMPTOM_TABLE_NAME,
+    SYMPTOM_TABLE_RETURNING,
+} from "../constants/model.constants";
 import db from "../db/db";
 import { SymptomNotFoundError } from "../errors/allergy.error";
 import DatabaseError from "../errors/Database.error";
-import SymptomInterface, { SymptomToInsert } from "../interfaces/Symptom.interfaces";
+import SymptomInterface, {
+    SymptomToInsert,
+} from "../interfaces/Symptom.interfaces";
 import logger from "../misc/logger";
 
 class SymptomModel {
@@ -19,7 +24,11 @@ class SymptomModel {
                 .insert(symptomData)
                 .returning(SYMPTOM_TABLE_RETURNING);
 
-            logger.info(`Symptom [${insertedSymptom[0].id}] created successfully`);
+            logger.info(
+                `Symptom [${insertedSymptom.map(
+                    (each) => `${each.id}`
+                )}] created successfully`
+            );
             return insertedSymptom;
         } catch (error) {
             console.log(error);
@@ -45,21 +54,23 @@ class SymptomModel {
         }
     };
 
-    public static getSymptomById = async (id: string) => {
+    public static getSymptomById = async (symptomId: string) => {
         try {
-            logger.info(`Get Symptom by id [${id}]: Model`);
+            logger.info(`Get Symptom by id [${symptomId}]: Model`);
 
             const retrievedSymptom: SymptomInterface = await db
                 .table(this.table)
                 .select("*")
-                .where({ id: id })
+                .where({ id: symptomId })
                 .first();
 
-            logger.info(`Symptom [${retrievedSymptom.id}] retrieved successfully`);
+            logger.info(
+                `Symptom [${retrievedSymptom.id}] retrieved successfully`
+            );
             return retrievedSymptom;
         } catch (error) {
             console.log(error);
-            logger.error(`Symptom [${id}] not found`);
+            logger.error(`Symptom [${symptomId}] not found`);
             throw SymptomNotFoundError;
         }
     };
@@ -79,7 +90,9 @@ class SymptomModel {
                 .where({ id: symptomId })
                 .returning(SYMPTOM_TABLE_RETURNING);
 
-            logger.info(`Symptom [${updatedSymptom[0].id}] updated successfully`);
+            logger.info(
+                `Symptom [${updatedSymptom[0].id}] updated successfully`
+            );
             return updatedSymptom;
         } catch (error) {
             console.log(error);

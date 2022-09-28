@@ -1,11 +1,11 @@
-import SymptomInterface from "./Symptom.interfaceS";
+import SymptomInterface from "./Symptom.interfaces";
 
 interface AllergyInterface {
     id: string;
     allergyName: string;
     referredName?: string;
     riskLevel: string;
-    subCategory: boolean;
+    description: string;
     symptoms?: SymptomInterface[];
 }
 
