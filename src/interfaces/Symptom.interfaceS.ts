@@ -1,7 +1,6 @@
 interface SymptomInterface {
     id: string;
     symptom: string;
-    description?: string;
     allergyId: string;
 }
 

@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import appRouter from "./routes";
 import { notFound } from "./middlewares/notFound";
 import { errorHandler } from "./middlewares/errorHandler";
@@ -10,6 +11,8 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
+
+app.use(cors());
 
 app.get("/", (request: Request, response: Response) => {
     response.send("API is running...");

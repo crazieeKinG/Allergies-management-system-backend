@@ -8,7 +8,6 @@ export async function up(knex: Knex): Promise<void> {
     return knex.schema.createTable(SYMPTOM_TABLE_NAME, (table) => {
         table.increments("id");
         table.string("symptom").notNullable();
-        table.string("description").nullable();
         table.string("allergy_id").notNullable();
         table
             .foreign("allergy_id")
