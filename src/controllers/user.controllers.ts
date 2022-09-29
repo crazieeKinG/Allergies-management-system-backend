@@ -1,11 +1,12 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { UserCredentials, UserToInsert } from "../interfaces/User.interfaces";
 import { userService } from "../services";
 import { StatusCodes } from "http-status-codes";
 import logger from "../misc/logger";
+import AuthenticatedRequest from "../interfaces/AuthenticatedRequest.interfaces";
 
 export const createUser = async (
-    request: Request,
+    request: AuthenticatedRequest,
     response: Response,
     next: NextFunction
 ) => {
@@ -22,7 +23,7 @@ export const createUser = async (
 };
 
 export const getUsers = async (
-    request: Request,
+    request: AuthenticatedRequest,
     response: Response,
     next: NextFunction
 ) => {
@@ -36,8 +37,25 @@ export const getUsers = async (
     }
 };
 
+export const getUserProfile = async (
+    request: AuthenticatedRequest,
+    response: Response,
+    next: NextFunction
+) => {
+    logger.info("Get user profile: Controller");
+
+    const userId = request.authenticatedUser;
+
+    try {
+        const result = await userService.getUserProfile(userId as string);
+        response.send(result);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const signin = async (
-    request: Request,
+    request: AuthenticatedRequest,
     response: Response,
     next: NextFunction
 ) => {
@@ -53,7 +71,7 @@ export const signin = async (
 };
 
 export const updateUser = async (
-    request: Request,
+    request: AuthenticatedRequest,
     response: Response,
     next: NextFunction
 ) => {
@@ -70,13 +88,13 @@ export const updateUser = async (
 };
 
 export const resetPassword = async (
-    request: Request,
+    request: AuthenticatedRequest,
     response: Response,
     next: NextFunction
 ) => {
     logger.info("Update User - reset password: Controller");
 
-    const { userId } = request.params;
+    const userId = request.authenticatedUser as string;
     const { password }: { password: string } = request.body;
 
     try {
@@ -88,7 +106,7 @@ export const resetPassword = async (
 };
 
 export const deleteUser = async (
-    request: Request,
+    request: AuthenticatedRequest,
     response: Response,
     next: NextFunction
 ) => {

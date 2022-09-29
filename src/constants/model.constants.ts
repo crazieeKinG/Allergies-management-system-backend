@@ -5,6 +5,7 @@ export const SYMPTOM_TABLE_NAME = "symptom";
 export const USER_TABLE_RETURNING = [
     "id",
     "full_name",
+    "gender",
     "email",
     "date_of_birth",
     "address",
@@ -20,8 +21,4 @@ export const ALLERGY_TABLE_RETURNING = [
     "created_at",
 ];
 
-export const SYMPTOM_TABLE_RETURNING = [
-    "id",
-    "symptom",
-    "allergy_id",
-];
+export const SYMPTOM_TABLE_RETURNING = ["id", "symptom", "allergy_id"];

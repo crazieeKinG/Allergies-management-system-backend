@@ -1,4 +1,9 @@
 import { object, string, date } from "yup";
+import {
+    FILE_TYPES,
+    FILE_SIZE_IN_BYTES,
+    FILE_SIZE_IN_MEGABYTES,
+} from "../constants/cloudinary.constants";
 
 export const userSignInSchema = object({
     email: string().email("Please provide an valid email").required(),
@@ -12,6 +17,24 @@ export const userInsertSchema = object({
     password: string().min(8).max(15).required(),
     dateOfBirth: date().required(),
     address: string().max(50).nullable(),
+    photo: object()
+        .nullable()
+        .test(
+            "Photo",
+            `Please provide a valid photo of type: ${FILE_TYPES.join(", ")}`,
+            (file) => {
+                if (!!file) return FILE_TYPES.includes(file.mimetype);
+                else return true;
+            }
+        )
+        .test(
+            "Photo",
+            `Please provide photo of size less than ${FILE_SIZE_IN_MEGABYTES}MB`,
+            (file) => {
+                if (!!file) return file.size < FILE_SIZE_IN_BYTES;
+                else return true;
+            }
+        ),
 });
 
 export const userUpdateSchema = object({

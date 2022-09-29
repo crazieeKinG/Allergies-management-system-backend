@@ -15,6 +15,8 @@ export const createUser = async (
 ): Promise<ResponseData<UserInterface>> => {
     logger.info("Create User: Service");
 
+    await UserModel.checkEmailExists(userData.email);
+
     const hashedPassword = await hashPassword(userData.password);
 
     const insertedData = await UserModel.createUser({
@@ -35,6 +37,17 @@ export const getUsers = async () => {
 
     return {
         data: retrievedUsers,
+        message: "User fetched successfully",
+    };
+};
+
+export const getUserProfile = async (userId: string) => {
+    logger.info("Get all users: Service");
+
+    const retrievedUser = await UserModel.getUserById(userId);
+
+    return {
+        data: retrievedUser,
         message: "User fetched successfully",
     };
 };

@@ -17,6 +17,7 @@ export const createAllergy = async (
 
     const allergyData: AllergyToInsert = {
         allergyName: allData.allergyName,
+        referredName: allData.referredName,
         riskLevel: allData.riskLevel,
         description: allData.description,
     };

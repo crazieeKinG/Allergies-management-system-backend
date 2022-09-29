@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { userController } from "../controllers";
+import upload from "../fileHandlers/multer";
 import authenticate from "../middlewares/authentication";
 import validateRequest from "../middlewares/validate";
 import {
@@ -12,9 +13,11 @@ import {
 const userRouter = Router();
 
 userRouter.get("/", authenticate, userController.getUsers);
+userRouter.get("/profile", authenticate, userController.getUserProfile);
 
 userRouter.post(
     "/signup",
+    upload.single("photo"),
     validateRequest(userInsertSchema),
     userController.createUser
 );
@@ -32,7 +35,7 @@ userRouter.put(
     userController.updateUser
 );
 userRouter.put(
-    "/:userId/reset/password",
+    "/reset/password",
     authenticate,
     validateRequest(userResetPasswordSchema),
     userController.resetPassword

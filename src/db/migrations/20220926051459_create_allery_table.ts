@@ -5,9 +5,10 @@ export async function up(knex: Knex): Promise<void> {
     return knex.schema.createTable(ALLERGY_TABLE_NAME, (table) => {
         table.string("id").primary();
         table.string("allergy_name").notNullable();
-        table.string("referred_name").nullable();
-        table.text("description").defaultTo("").nullable();
+        table.string("referred_name").defaultTo("");
+        table.text("description").defaultTo("");
         table.string("risk_level").notNullable();
+        table.string("photoUrl").defaultTo("");
         table.datetime("created_at").defaultTo(knex.fn.now()).notNullable();
     });
 }
