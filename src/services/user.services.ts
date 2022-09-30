@@ -9,13 +9,29 @@ import UserModel from "../models/user.models";
 import hashPassword from "../utils/hashPassword";
 import verifyPassword from "../utils/verifyPassword";
 import jwt from "jsonwebtoken";
+import uploadImage from "../fileHandlers/uploadImage";
+import { unlinkSync } from "fs";
+import deleteImage from "../fileHandlers/deleteImage";
 
 export const createUser = async (
     userData: UserToInsert
 ): Promise<ResponseData<UserInterface>> => {
     logger.info("Create User: Service");
 
-    await UserModel.checkEmailExists(userData.email);
+    try {
+        await UserModel.checkEmailExists(userData.email);
+    } catch (error) {
+        if (userData.photoUrl) {
+            unlinkSync(userData.photoUrl);
+        }
+        throw error;
+    }
+
+    if (userData.photoUrl) {
+        const uploadUrl = await uploadImage(userData.photoUrl);
+
+        userData.photoUrl = uploadUrl;
+    }
 
     const hashedPassword = await hashPassword(userData.password);
 
@@ -71,6 +87,7 @@ export const signin = async (userCredentials: UserCredentials) => {
     return {
         data: {
             user: retrievedUser.fullName,
+            photoUrl: retrievedUser.photoUrl,
             id: retrievedUser.id,
             accessToken: accessToken,
         },
@@ -84,14 +101,29 @@ export const updateUser = async (
 ): Promise<ResponseData<UserInterface>> => {
     logger.info("Update User: Service");
 
-    await UserModel.getUserById(userId);
+    try {
+        const previousData = await UserModel.getUserById(userId);
 
-    const updatedData = await UserModel.updateUser(userData, userId);
+        if (userData.photoUrl) {
+            const uploadUrl = await uploadImage(userData.photoUrl);
 
-    return {
-        data: updatedData,
-        message: "User updated successfully",
-    };
+            userData.photoUrl = uploadUrl;
+        }
+
+        const updatedData = await UserModel.updateUser(userData, userId);
+
+        if (previousData.photoUrl) await deleteImage(previousData.photoUrl);
+
+        return {
+            data: updatedData,
+            message: "User updated successfully",
+        };
+    } catch (error) {
+        if (userData.photoUrl) {
+            unlinkSync(userData.photoUrl);
+        }
+        throw error;
+    }
 };
 
 export const resetPassword = async (password: string, userId: string) => {
@@ -113,7 +145,11 @@ export const deleteUser = async (
 ): Promise<ResponseData<UserInterface>> => {
     logger.info("Delete User: Service");
 
+    await UserModel.getUserById(userId);
+
     const deletedData = await UserModel.deleteUser(userId);
+
+    if (deletedData.photoUrl) await deleteImage(deletedData.photoUrl);
 
     return {
         data: deletedData,

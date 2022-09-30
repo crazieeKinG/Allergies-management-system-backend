@@ -9,6 +9,7 @@ export const USER_TABLE_RETURNING = [
     "email",
     "date_of_birth",
     "address",
+    "photo_url",
     "created_at",
 ];
 
@@ -18,6 +19,7 @@ export const ALLERGY_TABLE_RETURNING = [
     "referred_name",
     "risk_level",
     "description",
+    "photo_url",
     "created_at",
 ];
 

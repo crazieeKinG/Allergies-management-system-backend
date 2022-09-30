@@ -8,7 +8,7 @@ export async function up(knex: Knex): Promise<void> {
         table.string("referred_name").defaultTo("");
         table.text("description").defaultTo("");
         table.string("risk_level").notNullable();
-        table.string("photoUrl").defaultTo("");
+        table.string("photo_url").defaultTo("");
         table.datetime("created_at").defaultTo(knex.fn.now()).notNullable();
     });
 }

@@ -31,6 +31,7 @@ userRouter.post(
 userRouter.put(
     "/:userId",
     authenticate,
+    upload.single("photo"),
     validateRequest(userUpdateSchema),
     userController.updateUser
 );

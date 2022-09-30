@@ -10,7 +10,7 @@ export async function up(knex: Knex): Promise<void> {
         table.string("password").notNullable();
         table.datetime("date_of_birth").notNullable();
         table.string("address").notNullable();
-        table.string("photoUrl").defaultTo("");
+        table.string("photo_url").defaultTo("");
         table.datetime("created_at").defaultTo(knex.fn.now()).notNullable();
     });
 }

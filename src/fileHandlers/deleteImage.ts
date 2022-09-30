@@ -18,9 +18,9 @@ const deleteImage = async (fileString: string) => {
     logger.info("Deleting image");
     try {
         const assetId = getImageCloudinaryId(fileString);
-        if (assetId !== "default_f2y0f2") {
+        if (assetId !== "default") {
             const publicId =
-                CLOUDINARY_PRESET + getImageCloudinaryId(fileString);
+                CLOUDINARY_PRESET + "/" + getImageCloudinaryId(fileString);
             const deleteResponse = await cloudinary.uploader.destroy(publicId);
             return deleteResponse.result;
         }

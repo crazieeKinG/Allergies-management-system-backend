@@ -15,6 +15,8 @@ const validateRequest =
 
         if (body.dateOfBirth) body.dateOfBirth = new Date(body.dateOfBirth);
 
+        if (body.symptoms) body.symptoms = JSON.parse(body.symptoms);
+
         try {
             const validatedResponse = await schema.validate(body, {
                 strict: true,

@@ -18,7 +18,11 @@ allergyRouter.post(
     allergyController.createAllergy
 );
 
-allergyRouter.put("/:allergyId", allergyController.updateAllergy);
+allergyRouter.put(
+    "/:allergyId",
+    upload.single("photo"),
+    allergyController.updateAllergy
+);
 
 allergyRouter.delete("/:allergyId", allergyController.deleteAllergy);
 

@@ -13,6 +13,11 @@ export const createUser = async (
     logger.info("Create User: Controller");
     const userData = { ...request.body } as UserToInsert;
 
+    if (request.file) {
+        const fileString = request.file.path;
+        userData.photoUrl = fileString;
+    }
+
     try {
         const result = await userService.createUser(userData);
         response.status(StatusCodes.CREATED);
@@ -78,6 +83,11 @@ export const updateUser = async (
     logger.info("Update User: Controller");
     const { userId } = request.params;
     const userData = { ...request.body } as UserToInsert;
+
+    if (request.file) {
+        const fileString = request.file.path;
+        userData.photoUrl = fileString;
+    }
 
     try {
         const result = await userService.updateUser(userData, userId);

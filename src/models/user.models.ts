@@ -5,6 +5,7 @@ import {
 import db from "../db/db";
 import DatabaseError from "../errors/Database.error";
 import { UserAlreadyExists, UserNotFoundError } from "../errors/Signin.error";
+import deleteImage from "../fileHandlers/deleteImage";
 import UserInterface, { UserToInsert } from "../interfaces/User.interfaces";
 import logger from "../misc/logger";
 import createUniqueId from "../utils/createUniqueId";
@@ -28,6 +29,7 @@ class UserModel {
             return insertedUser;
         } catch (error) {
             console.log(error);
+            if (userData.photoUrl) await deleteImage(userData.photoUrl);
             throw DatabaseError;
         }
     };
@@ -129,6 +131,7 @@ class UserModel {
             return updatedUser;
         } catch (error) {
             console.log(error);
+            if (userData.photoUrl) await deleteImage(userData.photoUrl);
             throw DatabaseError;
         }
     };
@@ -159,14 +162,14 @@ class UserModel {
         try {
             logger.info("Delete User: Model");
 
-            const deletedData = await db
+            const deletedData: UserInterface[] = await db
                 .table(this.table)
                 .delete()
                 .where({ id: userId })
                 .returning(USER_TABLE_RETURNING);
 
             logger.info(`User [${userId}] deleted successfully`);
-            return deletedData;
+            return deletedData[0];
         } catch (error) {
             console.log(error);
             throw DatabaseError;
