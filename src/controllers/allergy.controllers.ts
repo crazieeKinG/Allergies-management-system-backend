@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import AllergyInterface, {
     AllergyToInsert,
-} from "../interfaces/Allergy.interfaces";
-import SymptomInterface from "../interfaces/Symptom.interfaces";
+} from "../interfaces/allergyInterfaces";
+import SymptomInterface from "../interfaces/symptomInterfaces";
 import logger from "../misc/logger";
 import { allergyService, symptomService } from "../services";
 

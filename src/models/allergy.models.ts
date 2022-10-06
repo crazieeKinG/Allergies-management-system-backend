@@ -9,7 +9,7 @@ import DatabaseError from "../errors/Database.error";
 import deleteImage from "../fileHandlers/deleteImage";
 import AllergyInterface, {
     AllergyToInsert,
-} from "../interfaces/Allergy.interfaces";
+} from "../interfaces/allergyInterfaces";
 import logger from "../misc/logger";
 import allergyOutputFormatter from "../utils/allergyOutputFormatter";
 import createUniqueId from "../utils/createUniqueId";

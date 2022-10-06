@@ -1,7 +1,7 @@
-import ResponseData from "../interfaces/Response.interface";
+import ResponseData from "../interfaces/responseInterface";
 import SymptomInterface, {
     SymptomToInsert,
-} from "../interfaces/Symptom.interfaces";
+} from "../interfaces/symptomInterfaces";
 import logger from "../misc/logger";
 import SymptomModel from "../models/symptom.models";
 

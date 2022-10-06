@@ -1,4 +1,4 @@
-import SymptomInterface from "./Symptom.interfaces";
+import SymptomInterface from "./symptomInterfaces";
 
 interface AllergyInterface {
     id: string;
