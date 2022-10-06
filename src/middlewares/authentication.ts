@@ -6,7 +6,7 @@ import {
 } from "../errors/authentication.error";
 import AuthenticatedRequest, {
     TokenPayload,
-} from "../interfaces/AuthenticatedRequest.interfaces";
+} from "../interfaces/authenticatedRequest.interfaces";
 
 const authenticate = async (
     request: AuthenticatedRequest,

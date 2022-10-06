@@ -1,7 +1,7 @@
-import ResponseData from "../interfaces/Response.interface";
+import ResponseData from "../interfaces/response.interface";
 import AllergyInterface, {
     AllergyToInsert,
-} from "../interfaces/Allergy.interfaces";
+} from "../interfaces/allergy.interfaces";
 import logger from "../misc/logger";
 import AllergyModel from "../models/allergy.models";
 import uploadImage from "../fileHandlers/uploadImage";

@@ -1,9 +1,9 @@
 import { InvalidPasswordError } from "../errors/Signin.error";
-import ResponseData from "../interfaces/Response.interface";
+import ResponseData from "../interfaces/response.interface";
 import UserInterface, {
     UserCredentials,
     UserToInsert,
-} from "../interfaces/User.interfaces";
+} from "../interfaces/user.interfaces";
 import logger from "../misc/logger";
 import UserModel from "../models/user.models";
 import hashPassword from "../utils/hashPassword";
