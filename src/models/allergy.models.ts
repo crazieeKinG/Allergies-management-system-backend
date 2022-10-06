@@ -5,6 +5,7 @@ import {
 import db from "../db/db";
 import { AllergyNotFoundError } from "../errors/allergy.error";
 import DatabaseError from "../errors/Database.error";
+import deleteImage from "../fileHandlers/deleteImage";
 import AllergyInterface, {
     AllergyToInsert,
 } from "../interfaces/Allergy.interfaces";
@@ -32,6 +33,7 @@ class AllergyModel {
             return insertedAllergy[0];
         } catch (error) {
             console.log(error);
+            if (allergyData.photoUrl) await deleteImage(allergyData.photoUrl);
             throw DatabaseError;
         }
     };
@@ -96,6 +98,7 @@ class AllergyModel {
             return updatedAllergy[0];
         } catch (error) {
             console.log(error);
+            if (allergyData.photoUrl) await deleteImage(allergyData.photoUrl);
             throw DatabaseError;
         }
     };
@@ -106,14 +109,14 @@ class AllergyModel {
         try {
             logger.info("Delete Allergy: Model");
 
-            const deletedData = await db
+            const deletedData: AllergyInterface[] = await db
                 .table(this.table)
                 .delete()
                 .where({ id: allergyId })
                 .returning(ALLERGY_TABLE_RETURNING);
 
             logger.info(`Allergy [${allergyId}] deleted successfully`);
-            return deletedData;
+            return deletedData[0];
         } catch (error) {
             console.log(error);
             throw DatabaseError;

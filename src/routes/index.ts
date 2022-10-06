@@ -5,9 +5,9 @@ import userRouter from "./user.routes";
 
 const appRouter = Router();
 
-appRouter.use("/users", userRouter);
+appRouter.use("/user", userRouter);
 
-appRouter.use("/allergys", allergyRouter);
-appRouter.use("/symptoms", symptomRouter);
+appRouter.use("/allergy", allergyRouter);
+appRouter.use("/symptom", symptomRouter);
 
 export default appRouter;

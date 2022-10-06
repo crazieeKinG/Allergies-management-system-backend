@@ -17,9 +17,15 @@ export const createAllergy = async (
 
     const allergyData: AllergyToInsert = {
         allergyName: allData.allergyName,
+        referredName: allData.referredName,
         riskLevel: allData.riskLevel,
         description: allData.description,
     };
+
+    if (request.file) {
+        const fileString = request.file.path;
+        allergyData.photoUrl = fileString;
+    }
 
     try {
         const result = await allergyService.createAllergy(allergyData);
@@ -68,6 +74,11 @@ export const updateAllergy = async (
     logger.info("Update Allergy: Controller");
     const { allergyId } = request.params;
     const allergyData = { ...request.body } as AllergyToInsert;
+
+    if (request.file) {
+        const fileString = request.file.path;
+        allergyData.photoUrl = fileString;
+    }
 
     try {
         const result = await allergyService.updateAllergy(

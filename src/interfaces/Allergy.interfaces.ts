@@ -6,6 +6,7 @@ interface AllergyInterface {
     referredName?: string;
     riskLevel: string;
     description: string;
+    photoUrl?: string;
     symptoms?: SymptomInterface[];
 }
 

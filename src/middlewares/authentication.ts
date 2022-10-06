@@ -1,12 +1,15 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import {
     InvalidAccessToken,
     NoAuthorizationHeaderError,
 } from "../errors/authentication.error";
+import AuthenticatedRequest, {
+    TokenPayload,
+} from "../interfaces/AuthenticatedRequest.interfaces";
 
 const authenticate = async (
-    request: Request,
+    request: AuthenticatedRequest,
     response: Response,
     next: NextFunction
 ) => {
@@ -17,11 +20,13 @@ const authenticate = async (
 
         if (!token) return next(NoAuthorizationHeaderError);
 
-        const result = await jwt.verify(
-            token,
+        const result = (await jwt.verify(
+            token as string,
             process.env.JWT_SECRET_KEY as string
-        );
-        console.log(result);
+        )) as TokenPayload;
+
+        request.authenticatedUser = result.userId;
+
         next();
     } catch (error) {
         next(InvalidAccessToken);
