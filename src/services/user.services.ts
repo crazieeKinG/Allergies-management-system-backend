@@ -82,7 +82,10 @@ export const signin = async (userCredentials: UserCredentials) => {
 
     const accessToken = jwt.sign(
         { userId: retrievedUser.id },
-        process.env.JWT_SECRET_KEY as string
+        process.env.JWT_SECRET_KEY as string,
+        {
+            expiresIn: process.env.JWT_EXPIRATION_INTERVAL,
+        }
     );
 
     return {
