@@ -12,6 +12,7 @@ import jwt from "jsonwebtoken";
 import uploadImage from "../fileHandlers/uploadImage";
 import { unlinkSync } from "fs";
 import deleteImage from "../fileHandlers/deleteImage";
+import { DEFAULT_PROFILE_PICTURE } from "../constants/cloudinary.constants";
 
 export const createUser = async (
     userData: UserToInsert
@@ -31,7 +32,7 @@ export const createUser = async (
         const uploadUrl = await uploadImage(userData.photoUrl);
 
         userData.photoUrl = uploadUrl;
-    }
+    } else userData.photoUrl = DEFAULT_PROFILE_PICTURE;
 
     const hashedPassword = await hashPassword(userData.password);
 

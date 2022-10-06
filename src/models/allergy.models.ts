@@ -1,6 +1,7 @@
 import {
     ALLERGY_TABLE_NAME,
     ALLERGY_TABLE_RETURNING,
+    SYMPTOM_TABLE_NAME,
 } from "../constants/model.constants";
 import db from "../db/db";
 import { AllergyNotFoundError } from "../errors/allergy.error";
@@ -10,6 +11,7 @@ import AllergyInterface, {
     AllergyToInsert,
 } from "../interfaces/Allergy.interfaces";
 import logger from "../misc/logger";
+import allergyOutputFormatter from "../utils/allergyOutputFormatter";
 import createUniqueId from "../utils/createUniqueId";
 
 class AllergyModel {
@@ -46,7 +48,17 @@ class AllergyModel {
 
             const retrievedAllergy: AllergyInterface[] = await db
                 .table(this.table)
-                .select("*");
+                .select(
+                    `${this.table}.*`,
+                    `${SYMPTOM_TABLE_NAME}.id as symptomId`,
+                    `${SYMPTOM_TABLE_NAME}.symptom`
+                )
+                .leftJoin(
+                    SYMPTOM_TABLE_NAME,
+                    `${this.table}.id`,
+                    `${SYMPTOM_TABLE_NAME}.allergy_id`
+                )
+                .then((records) => records.reduce(allergyOutputFormatter, []));
 
             logger.info(`All allergys retrieved successfully`);
             return retrievedAllergy;
