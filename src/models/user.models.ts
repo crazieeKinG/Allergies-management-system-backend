@@ -6,7 +6,7 @@ import db from "../db/db";
 import DatabaseError from "../errors/Database.error";
 import { UserAlreadyExists, UserNotFoundError } from "../errors/Signin.error";
 import deleteImage from "../fileHandlers/deleteImage";
-import UserInterface, { UserToInsert } from "../interfaces/user.interfaces";
+import UserInterface, { UserToInsert } from "../interfaces/userInterfaces";
 import logger from "../misc/logger";
 import createUniqueId from "../utils/createUniqueId";
 

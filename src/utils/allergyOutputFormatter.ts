@@ -1,4 +1,4 @@
-import AllergyInterface from "../interfaces/allergy.interfaces";
+import AllergyInterface from "../interfaces/allergyInterfaces";
 
 const allergyOutputFormatter = (output: AllergyInterface[], allergy: any) => {
     let newAllergy = output.filter(

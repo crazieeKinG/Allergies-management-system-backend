@@ -1,9 +1,9 @@
 import { NextFunction, Response } from "express";
-import { UserCredentials, UserToInsert } from "../interfaces/user.interfaces";
+import { UserCredentials, UserToInsert } from "../interfaces/userInterfaces";
 import { userService } from "../services";
 import { StatusCodes } from "http-status-codes";
 import logger from "../misc/logger";
-import AuthenticatedRequest from "../interfaces/authenticatedRequest.interfaces";
+import AuthenticatedRequest from "../interfaces/authenticatedRequestInterfaces";
 
 export const createUser = async (
     request: AuthenticatedRequest,

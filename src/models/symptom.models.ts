@@ -7,7 +7,7 @@ import { SymptomNotFoundError } from "../errors/allergy.error";
 import DatabaseError from "../errors/Database.error";
 import SymptomInterface, {
     SymptomToInsert,
-} from "../interfaces/symptom.interfaces";
+} from "../interfaces/symptomInterfaces";
 
 import logger from "../misc/logger";
 
