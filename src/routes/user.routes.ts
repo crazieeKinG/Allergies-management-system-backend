@@ -28,6 +28,9 @@ userRouter.post(
     userController.signin
 );
 
+userRouter.post("/refresh", userController.generateAccessTokenFromRefreshToken);
+userRouter.post("/signout", userController.signout);
+
 userRouter.put(
     "/:userId",
     authenticate,

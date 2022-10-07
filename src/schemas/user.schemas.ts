@@ -22,7 +22,6 @@ export const userInsertSchema = object({
             "Photo",
             `Please provide a valid photo of type: ${FILE_TYPES.join(", ")}`,
             (file) => {
-                console.log(file, !!file);
                 if (!!file && file.mimetype)
                     return FILE_TYPES.includes(file.mimetype);
                 else return true;
@@ -51,7 +50,6 @@ export const userUpdateSchema = object({
             "Photo",
             `Please provide a valid photo of type: ${FILE_TYPES.join(", ")}`,
             (file) => {
-                console.log(file, !!file);
                 if (!!file && file.mimetype)
                     return FILE_TYPES.includes(file.mimetype);
                 else return true;

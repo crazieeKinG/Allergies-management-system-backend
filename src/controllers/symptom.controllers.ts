@@ -16,7 +16,6 @@ export const createSymptom = async (
         const result = await symptomService.createSymptom(
             symptoms as SymptomToInsert[]
         );
-        console.log(symptoms);
 
         response.status(StatusCodes.CREATED);
         response.send(result);

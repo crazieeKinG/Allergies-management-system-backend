@@ -13,6 +13,10 @@ import uploadImage from "../fileHandlers/uploadImage";
 import { unlinkSync } from "fs";
 import deleteImage from "../fileHandlers/deleteImage";
 import { DEFAULT_PROFILE_PICTURE } from "../constants/cloudinary.constants";
+import generateAccessToken from "../utils/generateAccessToken";
+import RefreshTokenModel from "../models/refresh.models";
+import { TokenPayload } from "../interfaces/authenticatedRequestInterfaces";
+import { RefreshTokenExpiredError } from "../errors/refresh.error";
 
 export const createUser = async (
     userData: UserToInsert
@@ -80,13 +84,20 @@ export const signin = async (userCredentials: UserCredentials) => {
     );
     if (!passwordVerification) throw InvalidPasswordError;
 
-    const accessToken = jwt.sign(
+    const accessToken = generateAccessToken(retrievedUser.id);
+
+    const refreshToken = jwt.sign(
         { userId: retrievedUser.id },
-        process.env.JWT_SECRET_KEY as string,
+        process.env.JWT_REFRESH_SECRET_KEY as string,
         {
-            expiresIn: process.env.JWT_EXPIRATION_INTERVAL,
+            expiresIn: process.env.JWT_REFRESH_EXPIRATION_INTERVAL,
         }
     );
+
+    await RefreshTokenModel.createRefreshToken({
+        refreshToken: refreshToken,
+        userId: retrievedUser.id,
+    });
 
     return {
         data: {
@@ -96,6 +107,46 @@ export const signin = async (userCredentials: UserCredentials) => {
             accessToken: accessToken,
         },
         message: "User logged in successfully",
+        refreshToken: refreshToken,
+    };
+};
+
+export const generateAccessTokenFromRefreshToken = async (
+    refreshToken: string
+) => {
+    logger.info("Generating access token from refresh token: Service");
+
+    await RefreshTokenModel.getRefreshToken(refreshToken);
+
+    try {
+        const { userId } = jwt.verify(
+            refreshToken,
+            process.env.JWT_REFRESH_SECRET_KEY as string
+        ) as TokenPayload;
+
+        const accessToken = generateAccessToken(userId);
+
+        return {
+            data: {
+                accessToken,
+            },
+            message: "Access token generated successfully",
+        };
+    } catch (error) {
+        throw RefreshTokenExpiredError;
+    }
+};
+
+export const signout = async (refreshToken: string) => {
+    logger.info("Signing out user: Service");
+
+    await RefreshTokenModel.getRefreshToken(refreshToken);
+
+    await RefreshTokenModel.deleteRefreshToken(refreshToken);
+
+    return {
+        data: {},
+        message: "User signed out successfully",
     };
 };
 
