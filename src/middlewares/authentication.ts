@@ -17,11 +17,11 @@ const authenticate = async (
         const token =
             request.headers.authorization?.split(" ")[1] ||
             (request.headers.auth as string);
-
+            
         if (!token) return next(NoAuthorizationHeaderError);
 
         const result = (await jwt.verify(
-            token as string,
+            token,
             process.env.JWT_SECRET_KEY as string
         )) as TokenPayload;
 

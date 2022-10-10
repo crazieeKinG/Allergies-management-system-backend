@@ -4,6 +4,8 @@ import { userService } from "../services";
 import { StatusCodes } from "http-status-codes";
 import logger from "../misc/logger";
 import AuthenticatedRequest from "../interfaces/authenticatedRequestInterfaces";
+import getRefreshTokenFromCookie from "../utils/getRefreshTokenFromCookie";
+import { NoRefreshTokenForund } from "../errors/refresh.error";
 
 export const createUser = async (
     request: AuthenticatedRequest,
@@ -68,10 +70,62 @@ export const signin = async (
     const userCredentials = { ...request.body } as UserCredentials;
 
     try {
-        const result = await userService.signin(userCredentials);
-        response.send(result);
+        const { data, message, refreshToken } = await userService.signin(
+            userCredentials
+        );
+
+        response.cookie("refreshToken", refreshToken).send({ data, message });
     } catch (error) {
         next(error);
+    }
+};
+
+export const generateAccessTokenFromRefreshToken = async (
+    request: AuthenticatedRequest,
+    response: Response,
+    next: NextFunction
+) => {
+    logger.info("Generating access token from refresh token: Controller");
+    const cookie = request.headers.cookie as string;
+
+    if (!cookie) next(NoRefreshTokenForund);
+    else {
+        const refreshToken = getRefreshTokenFromCookie(cookie);
+
+        try {
+            const result =
+                await userService.generateAccessTokenFromRefreshToken(
+                    refreshToken
+                );
+            response.send(result);
+        } catch (error) {
+            response.clearCookie("refreshToken");
+            next(error);
+        }
+    }
+};
+
+export const signout = async (
+    request: AuthenticatedRequest,
+    response: Response,
+    next: NextFunction
+) => {
+    logger.info("Signout user: Controller");
+
+    const cookie = request.headers.cookie as string;
+
+    if (!cookie) next(NoRefreshTokenForund);
+    else {
+        const refreshToken = getRefreshTokenFromCookie(cookie);
+
+        try {
+            const result = await userService.signout(refreshToken);
+
+            response.clearCookie("refreshToken").send(result);
+        } catch (error) {
+            response.clearCookie("refreshToken");
+            next(error);
+        }
     }
 };
 

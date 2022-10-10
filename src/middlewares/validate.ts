@@ -28,7 +28,6 @@ const validateRequest =
 
             request.body = { ...stripedResponse };
 
-            console.log(stripedResponse);
             next();
         } catch (error: any) {
             if (request.file) {
