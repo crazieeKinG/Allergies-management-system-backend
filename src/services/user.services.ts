@@ -133,6 +133,8 @@ export const generateAccessTokenFromRefreshToken = async (
             message: "Access token generated successfully",
         };
     } catch (error) {
+        await RefreshTokenModel.deleteRefreshToken(refreshToken);
+        
         throw RefreshTokenExpiredError;
     }
 };

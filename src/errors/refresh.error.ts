@@ -13,5 +13,5 @@ export const RefreshTokenNotFoundError = new CustomError(
 
 export const RefreshTokenExpiredError = new CustomError(
     "Session expired. Please re-sign in to your account.",
-    StatusCodes.UNAUTHORIZED
+    StatusCodes.FORBIDDEN
 );
