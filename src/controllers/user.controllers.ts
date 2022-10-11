@@ -77,6 +77,7 @@ export const signin = async (
         response
             .cookie("refreshToken", refreshToken, {
                 httpOnly: true,
+                secure: true,
                 sameSite: "none",
             })
             .send({ data, message });
